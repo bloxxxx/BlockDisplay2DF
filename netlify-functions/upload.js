@@ -12,7 +12,7 @@ exports.handler = async (event, context) => {
 
         // Return the link to the frontend
         const pasteLink = `https://privatebin.net/?${response.data}`;
-        
+
         return {
             statusCode: 200,
             body: JSON.stringify({ link: pasteLink }),
