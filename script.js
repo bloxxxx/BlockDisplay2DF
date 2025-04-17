@@ -1,25 +1,23 @@
-// Getting references to the drop area and the status message elements
-const dropArea = document.getElementById('drop-area');
-const statusMessage = document.getElementById('status');
+async function uploadToBackend(content) {
+    const apiUrl = '/.netlify/functions/upload'; // This is the URL for the Netlify Function
 
-// Handle file drop (drag and drop functionality)
-dropArea.addEventListener('dragover', (event) => {
-    event.preventDefault();
-    dropArea.style.backgroundColor = "#e7f8e7";
-});
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ content })
+        });
 
-dropArea.addEventListener('dragleave', () => {
-    dropArea.style.backgroundColor = "transparent";
-});
+        if (!response.ok) {
+            throw new Error('Failed to upload to backend');
+        }
 
-dropArea.addEventListener('drop', (event) => {
-    event.preventDefault();
-    dropArea.style.backgroundColor = "transparent";
-
-    const file = event.dataTransfer.files[0];
-    if (file && file.name.endsWith('.bdengine')) {
-        handleFile(file);
-    } else {
-        statusMessage.textContent = 'Please upload a valid .bdengine file.';
+        const result = await response.json();
+        return result.link; // The backend will return the PrivateBin link
+    } catch (err) {
+        console.error("Error in uploadToBackend:", err);
+        throw new Error('Error communicating with backend');
     }
-});
+}
