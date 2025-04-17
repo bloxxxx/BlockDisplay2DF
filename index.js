@@ -26,6 +26,8 @@ async function handleFile(file) {
 
             // Upload the decompressed content to PrivateBin (anonymous paste)
             const privatebinLink = await uploadToPrivateBin(decompressedData);
+
+            // Display the link to the user
             statusMessage.innerHTML = `File uploaded successfully! <a href="${privatebinLink}" target="_blank">View on PrivateBin</a>`;
         } catch (err) {
             statusMessage.textContent = `Error: ${err.message}`;
@@ -59,9 +61,12 @@ async function uploadToPrivateBin(content) {
 
         // The response should contain the URL to the paste
         const result = await response.text();
-        return `https://privatebin.net/?${result}`; // The result will contain the URL of the paste
+
+        // Return the URL in the correct format
+        return `https://privatebin.net/?${result}`; // This will give the correct link to the paste
     } catch (err) {
         console.error("Error in uploadToPrivateBin:", err);
         throw new Error('Error uploading to PrivateBin.');
     }
 }
+
